@@ -154,15 +154,24 @@ print('configuration= ',configuration, ' is ',type(configuration))
 print('')
 
 
+#Now that data has been loads, we can play with it
+
+##################################################
+#   Creating an array of ions' label to later identy them
+##################################################
 
 
-
-
-
-
-
-
-
+ion_label = []
+for i in range(3):
+    for j in range(species_number[i]):
+        k=j+1
+        ion_label.append(species[i]+str(k))
+print(ion_label)
+        
+        
+##################################################
+#   
+##################################################
 
 
 
