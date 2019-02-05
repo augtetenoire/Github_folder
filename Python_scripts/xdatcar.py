@@ -4,33 +4,17 @@ Created on Fri Dec 14 16:59:31 2018
 
 @author: auguste
 """
-
 import numpy as np
 import scipy
+import matplotlib.pyplot as plt
 import re
 
-
-##################################################
-##################################################
-##################################################
-#   This program read the VASP XDATCAR file in order to operate on ions coordinates
-##################################################
-##################################################
-##################################################
-
-
-
-
-
-
-
-
-XDATCAR_PATH= '/home/auguste/TEST/IBRION_2/XDATCAR'
-
-
-
-
-
+"""
+|-----------------------------------------------------------------------------------|
+|   This program read the VASP XDATCAR file in order to operate on ions coordinates |
+|-----------------------------------------------------------------------------------|
+"""
+XDATCAR_PATH= '/home/auguste/Server_mount/Ruthenium/Molecular_Dynamics/KPOINTS_361/RPBE/SMASSS_0.01/756580.maui01_Molecular_dynamics_SMASS_0.01_RPBE_KPOINT_361/finish/767798.maui01_Molecular_dynamics_SMASS_0.01_RPBE_KPOINT_361/XDATCAR'
 
 
 ##################################################
@@ -48,10 +32,6 @@ print('')
 ##################################################
 #   End reading the number of configuration in XDATCAR file
 ##################################################
-
-
-
-
 
 
 
@@ -81,6 +61,10 @@ with open(XDATCAR_PATH,'r') as XDATCAR_file:
     for i in range(3):
         cell_vectors.append(np.array(next(XDATCAR_file).split()).astype(float))
         
+    cell_vectors = np.asarray(cell_vectors)# to convert cell_vector in a nice computable matrix
+    
+    
+    
         #I stop here to comment a bit the program.
         #split() is used to split the readed line into column. Without argument it skip blank space (that is what we want it to do). It also put all the splited colums in an array.
         #next(file) is used to pass to the next output. 
@@ -106,25 +90,26 @@ with open(XDATCAR_PATH,'r') as XDATCAR_file:
     for i in range(len(species_number)):
         ions_number = ions_number + species_number[i]
     
+   
+    
     ##################################################
-    #   Reading the number label of the configuration & ions vector for this configuration
+    #   Reading the number label of the configuration 
+	#	& ions vector for this configuration
     ##################################################
-    
-    
-    
-    
+           
     configuration = []
     for conf in range(config_number):
         configuration_label = np.array(re.findall(r'[\d.]+', XDATCAR_file.readline())).astype(int)
-        print('configuration_label= ',configuration_label, ' is ',type(configuration_label[0]))
-        print('')
+        #print('configuration_label= ',configuration_label, ' is ',type(configuration_label[0]))
+        #print('')
         ions_vectors = []
         for i in range(ions_number):
             ions_vectors.append(np.array(next(XDATCAR_file).split()).astype(float))   
             
         configuration.append(np.array(ions_vectors))
-        print('ions_vectors= ',ions_vectors, ' is ',type(ions_vectors))
-        print('')
+        #print('ions_vectors= ',ions_vectors, ' is ',type(ions_vectors))
+        #print('')
+    configuration = np.asarray(configuration) # convert configuration in a nice matrix
     
     #Example: configuration[2][1,1] is the 3rd configuration, 2nd line, y coordinate
     
@@ -150,9 +135,12 @@ print('')
 #print('')
 #print('ions_vectors= ',ions_vectors, ' is ',type(ions_vectors))
 #print('')
-print('configuration= ',configuration, ' is ',type(configuration))
+#print('configuration= ',configuration, ' is ',type(configuration))
+#print('')
+print('first configuration= ',configuration[0], ' is ',type(configuration))
 print('')
-
+print('last configuration= ',configuration[-1], ' is ',type(configuration))
+print('')
 
 #Now that data has been loads, we can play with it
 
@@ -162,7 +150,7 @@ print('')
 
 
 ion_label = []
-for i in range(3):
+for i in range(len(species)):
     for j in range(species_number[i]):
         k=j+1
         ion_label.append(species[i]+str(k))
